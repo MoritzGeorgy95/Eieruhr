@@ -1,0 +1,218 @@
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eier App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="eggstyle.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    
+    <div class="dropdown dropend" id="menu">
+        <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="images/menuicon.png" id="menuicon">
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          
+            <li>
+                <label for="customRange2" class="form-label" id="range_label">Minutes: 5</label>
+                <input type="range" class="form-range" min="4" max="10" id="customRange2" value="5">
+            </li>
+        </ul>
+    </div>
+
+    <div class="content-container">
+        
+        <img src="images/egg.png" id="egg">
+
+        <div id="timer">05 : 00</div>
+
+        <div class="button-container">
+            <button id="playpausebutton">
+                Start
+            </button>
+
+            <button id="stopbutton">
+                Stop
+            </button>
+
+        </div>
+    
+    </div>
+
+    <script>
+        let slider = document.getElementById("customRange2");
+        let output = document.getElementById("range_label");
+        output.innerHTML= 'Minuten: ' + slider.value;
+
+        slider.oninput = function () {
+            output.innerHTML = 'Minuten: ' + this.value;
+
+            if (this.value < 10) {
+                timer.innerHTML= '0' + this.value + ' : 00';
+            }
+
+            else {
+                timer.innerHTML= this.value + ' : 00';
+            }
+            
+        }
+
+    </script>
+
+    <script>
+
+        //global variables//
+
+            app_running= true;
+
+            let timer_running= false;  
+            let timer_paused= false;
+
+            let playpausebutton = document.getElementById('playpausebutton');
+            let stopbutton = document.getElementById('stopbutton');
+
+            let menu= document.getElementById("menu");
+
+            let alarm = new Audio("alarm.mp3");
+            let timer= document.getElementById('timer');
+            var interval
+
+        // timer function and interval//
+        
+            playpausebutton.onclick = function timerFunction() {  
+
+                if (!timer_running) {
+
+                    //entweder paused oder nicht; wenn paused dann nicht Wert vom slider nehmen//
+                    
+
+                    
+                    if (!timer_paused) {
+                        timer_running=true;
+                        menu.style.visibility = "hidden";
+                        let sliderTime= slider.value
+                        let startTime= new Date().getTime();
+                        let selectedTime= 1000 * 60 * sliderTime
+                        let endTime = startTime + selectedTime;
+                        timer_running = true;
+                        playpausebutton.innerHTML='Pause';
+                        stopbutton.style.display= 'inline';
+                        
+
+                        interval= setInterval(function() {
+
+                            let timeLeft = endTime - new Date().getTime();
+
+                            if (timeLeft > 0) {
+                                let minutes = timeLeft / (1000 * 60);
+                                minutes = Math.floor(minutes);
+                                let seconds = (timeLeft / 1000) % 60;
+                                seconds = Math.round(seconds);
+                                let text = '0' + minutes + ' : ' + seconds;
+                                timer.innerHTML= text;
+                                
+
+                            if (seconds<10) {
+                                    text = '0' + minutes + ' : ' + '0' + seconds;
+                                    timer.innerHTML= text;
+                                }
+                            }
+
+                            else {
+                                alarm.play();
+                                timer.innerHTML = '00:00';
+                                clearInterval(interval);
+                                timer_running= false;
+                                playpausebutton.innerHTML='Start';
+                                stopbutton.style.display= 'none';
+                                menu.style.visibility = 'visible';
+                            }
+
+                        }, 1000);
+                    }
+                    else {
+                        // jetzt alles gleich machen, nur anderen Startwert nehmen //
+                        timer_running=true;
+                        timer_paused=false;
+                        menu.style.visibility = "hidden";
+
+                        let stoppedMinutes= parseInt(timer.innerHTML.charAt(1));
+                        let stoppedSeconds= parseInt(timer.innerHTML.substring(5,7));
+
+
+                        let startTime= new Date().getTime();
+                        let selectedTime= (1000 * 60 * stoppedMinutes)+ (1000 * stoppedSeconds);
+                        let endTime = startTime + selectedTime;
+                        timer_running = true;
+                        playpausebutton.innerHTML='Pause';
+                        stopbutton.style.display= 'inline';
+                        
+
+                        interval= setInterval(function() {
+
+                            let timeLeft = endTime - new Date().getTime();
+
+                            if (timeLeft > 0) {
+                                let minutes = timeLeft / (1000 * 60);
+                                minutes = Math.floor(minutes);
+                                let seconds = (timeLeft / 1000) % 60;
+                                seconds = Math.round(seconds);
+                                let text = '0' + minutes + ' : ' + seconds;
+                                timer.innerHTML= text;
+                                
+
+                            if (seconds<10) {
+                                    text = '0' + minutes + ' : ' + '0' + seconds;
+                                    timer.innerHTML= text;
+                                }
+                            }
+
+                            else {
+                                alarm.play();
+                                timer.innerHTML = '00:00';
+                                clearInterval(interval);
+                                timer_running= false;
+                                menu.style.visibility = 'visible';
+                                playpausebutton.innerHTML='Start';
+                                stopbutton.style.display= 'none';
+                            }
+
+                        }, 1000);
+                        
+                    }
+                        
+                }
+                
+
+                else {
+                    clearInterval(interval);
+                    playpausebutton.innerHTML='Start';
+                    timer_running = false;
+                    timer_paused= true;
+                    menu.style.visibility = 'visible';
+                }
+    
+            };
+
+            //stopbutton//
+            
+            stopbutton.onclick = function clearfunction (){
+                clearInterval(interval);
+                timer.innerHTML = '00:00';
+                playpausebutton.innerHTML='Start';
+                stopbutton.style.display= 'none';
+                timer_running= false;
+                menu.style.visibility = "visible"
+            }
+
+            
+            
+                
+            </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+</html>

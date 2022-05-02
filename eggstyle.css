@@ -1,0 +1,110 @@
+body {
+    background-color: rgb(50, 50, 51)
+}
+
+/* dropdown menu */
+
+
+
+button {
+    width: 4rem;
+}
+
+.dropdown .btn {
+    background: none;
+    border: none;
+
+}
+
+.dropdown-menu {
+    width: 70%;
+}
+
+#menuicon{
+    width: 100%;
+}
+
+
+/* egg-image, timer, start-button */
+
+.content-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+   height: 75%;
+}
+
+
+#egg {
+    width: 10rem;
+}
+
+
+#timer {
+    font-size: 40px;
+    font-family: "Roboto", sans-serif;
+    color: white;
+    
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-container button {
+    border-radius: 10px;
+    width: 150px;
+    height: 40px;
+    border: none;
+    background-color: yellow;
+    font-size: 18px;
+    font-family: "Roboto", sans-serif;
+    cursor: pointer;
+}
+
+#stopbutton {
+    margin-left: 1rem;
+    display: none;
+}
+
+/* range slider */ 
+
+#range_label {
+    display: flex;
+    justify-content: center;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    background: yellow;
+    border: 1px solid black;
+}
+input[type=range]::-moz-range-thumb {
+    background: yellow;
+    border: 1px solid black;
+}
+input[type=range]::-ms-thumb {
+    background: yellow;
+    border: 1px solid black;
+}
+
+
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-20px, 0, 0);
+      }
+      
+      20%, 80% {
+        transform: translate3d(20px, 0, 0);
+      }
+    
+      30%, 50%, 70% {
+        transform: translate3d(-20px, 0, 0);
+      }
+    
+      40%, 60% {
+        transform: translate3d(20px, 0, 0);
+      }
+  }
